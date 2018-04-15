@@ -23,11 +23,16 @@ import com.example.demo.model.UnitOfMeasurement;
 import com.example.demo.respositories.CategoryRepository;
 import com.example.demo.respositories.RecipeRepository;
 import com.example.demo.respositories.UnitOfMeasurementRepository;
+import com.example.demo.respositories.reactive.UnitOfMeasurementReactiveRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
-
+@Slf4j
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
+	@Autowired
+	private UnitOfMeasurementReactiveRepository unitOfMeasurementReactiveRepository;
 	private RecipeRepository recipeRepository;
 	private CategoryRepository categoryRepository;
 	private UnitOfMeasurementRepository unitOfMeasurementRepository;
@@ -46,6 +51,8 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	}
 
 	public List<Recipe> getRecipes() {
+		
+		
 		List<Recipe> recipes = new ArrayList<Recipe>();
 
 		// adding categories
@@ -244,6 +251,8 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 		 loadCategories();
 	        loadUom();
+	        log.error("#################");
+			log.error(unitOfMeasurementReactiveRepository.count().block().toString());
 		recipeRepository.saveAll(getRecipes());
 	}
 
